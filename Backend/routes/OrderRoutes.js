@@ -4,17 +4,15 @@ import {
   createOrder,
   getUserOrders,
   getAllOrders,
-} from "../controllers/orderController.js"
+} from "../controllers/orderController.js";
 
 const router = express.Router();
 
-// ✅ User creates an order (after checkout)
-router.post("/", protect, createOrder);
+// 🔹 User routes
+router.post("/", protect, createOrder); // User creates order
+router.get("/my-orders", protect, getUserOrders); // User views own orders
 
-// ✅ User gets their own orders
-router.get("/my-orders", protect, getUserOrders);
-
-// ✅ Admin gets all orders
-router.get("/all", protect, adminOnly, getAllOrders);
+// 🔹 Admin routes
+router.get("/all", protect, adminOnly, getAllOrders); // Admin views all orders
 
 export default router;

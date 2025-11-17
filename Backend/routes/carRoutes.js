@@ -4,10 +4,10 @@ import { createCar, getCars, deleteCar } from "../controllers/carController.js";
 
 const router = express.Router();
 
-// Public routes
+// 🌍 Public routes
 router.get("/", getCars);
 
-// Admin-only routes
+// 🔐 Admin-only routes
 router.post("/", protect, adminOnly, createCar);
 router.delete("/:id", protect, adminOnly, deleteCar);
 
