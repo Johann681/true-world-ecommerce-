@@ -1,5 +1,6 @@
 "use client";
 import Home from './components/Hero';
+import Footer from './components/Homepage/Footer';
 // import React from 'react';
 import Navbar from './components/Homepage/NavBar';
 import ShopSection from './components/Homepage/ShopSection';
@@ -11,6 +12,7 @@ const Page = () => {
       <Navbar />
       <Home />
       <ShopSection />
+      <Footer/>
     </CartProvider>
   );
 };

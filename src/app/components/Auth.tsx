@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react"; // 💡 Assuming you have lucide-react installed
 
 /**
  * AuthSection
@@ -12,7 +13,7 @@ import { motion } from "framer-motion";
  * - Robust token extraction from many response shapes
  * - Stores token + user safely, sets axios default header
  * - Tries to use a global AuthContext if present, otherwise dispatches a window event
- * - Modern, professional, accessible UI using Tailwind
+ * - Modern, professional, accessible UI using Tailwind (Enhanced Styling)
  */
 
 type FormState = {
@@ -30,7 +31,7 @@ export default function AuthSection({ redirectTarget = "/" }) {
   const [error, setError] = useState("");
   const [form, setForm] = useState<FormState>({ name: "", email: "", password: "" });
 
-  // Accessible focus management
+  // Accessible focus management & smooth scroll
   useEffect(() => {
     document.documentElement.style.scrollBehavior = "smooth";
     return () => {
@@ -83,13 +84,12 @@ export default function AuthSection({ redirectTarget = "/" }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("handleSubmit triggered");
     setError("");
 
     // Basic validation
     if (mode === "register") {
       if (!form.name.trim() || !form.email.trim() || !form.password) {
-        setError("Please provide name, email, and password.");
+        setError("Please provide name, email, and a password.");
         return;
       }
     } else {
@@ -120,9 +120,6 @@ export default function AuthSection({ redirectTarget = "/" }) {
       const token = extractToken(res?.data);
       const user = extractUser(res?.data);
 
-console.log("Full response:", res.data);
-console.log("Extracted token:", token);
-
       if (!token) {
         console.error("Auth response (no token):", res?.data);
         throw new Error("Authentication succeeded but token is missing.");
@@ -149,104 +146,126 @@ console.log("Extracted token:", token);
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-gray-900 to-black text-white px-4 py-12">
-      {/* Subtle background blurs */}
+    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-gray-900 to-black text-white px-4 py-12 overflow-hidden">
+      {/* Subtle background blurs - Enhanced sizes/colors for deeper contrast */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-32 -top-20 w-[520px] h-[520px] bg-gradient-to-tr from-indigo-600/20 to-transparent blur-3xl rounded-full transform rotate-12" />
-        <div className="absolute -right-40 -bottom-24 w-[400px] h-[400px] bg-gradient-to-bl from-emerald-500/12 to-transparent blur-2xl rounded-full" />
+        <div className="absolute -left-40 -top-32 w-[600px] h-[600px] bg-indigo-700/15 blur-[100px] rounded-full transform rotate-12" />
+        <div className="absolute -right-52 -bottom-40 w-[500px] h-[500px] bg-emerald-600/10 blur-[90px] rounded-full" />
       </div>
 
       <motion.form
         onSubmit={handleSubmit}
-        initial={{ opacity: 0, y: 24 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="relative w-full max-w-md bg-white/6 backdrop-blur-md border border-white/8 rounded-2xl shadow-2xl p-6 sm:p-8"
+        transition={{ duration: 0.6, type: "spring", damping: 15, stiffness: 100 }}
+        className="relative w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-7 sm:p-10 z-10"
       >
-        <header className="mb-6">
-          <h1 className="text-2xl sm:text-3xl font-extrabold">{mode === "register" ? "Create your account" : "Welcome back"}</h1>
-          <p className="mt-1 text-sm text-slate-300">{mode === "register" ? "Join and start shopping" : "Sign in to access your account"}</p>
+        <header className="mb-8 text-center">
+          <h1 className="text-3xl sm:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-white">
+            {mode === "register" ? "Create Account" : "Welcome Back"}
+          </h1>
+          <p className="mt-2 text-sm text-slate-400">
+            {mode === "register" ? "Join the community and explore." : "Sign in to manage your orders."}
+          </p>
         </header>
 
         {error && (
-          <div role="alert" className="mb-4 rounded-md bg-red-600/10 border border-red-600/20 text-red-300 p-3 text-sm">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            role="alert" 
+            className="mb-6 rounded-xl bg-red-600/15 border border-red-600/30 text-red-300 p-4 text-sm font-medium"
+          >
             {error}
-          </div>
+          </motion.div>
         )}
 
-        <div className="space-y-4">
+        <div className="space-y-5">
           {mode === "register" && (
             <label className="block">
-              <span className="text-sm text-slate-200">Full name</span>
+              <span className="text-sm font-medium text-slate-200 block mb-1">Full name</span>
               <input
                 value={form.name}
                 onChange={(e) => setField("name", e.target.value)}
-                className="mt-1 w-full rounded-lg bg-white/6 border border-white/8 px-3 py-2 text-white placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 outline-none"
+                className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-white placeholder-slate-400 transition duration-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/50 outline-none shadow-inner"
                 placeholder="Jane Doe"
                 autoComplete="name"
                 aria-label="Full name"
+                required={mode === "register"}
               />
             </label>
           )}
 
           <label className="block">
-            <span className="text-sm text-slate-200">Email</span>
+            <span className="text-sm font-medium text-slate-200 block mb-1">Email address</span>
             <input
               value={form.email}
               onChange={(e) => setField("email", e.target.value)}
               type="email"
-              className="mt-1 w-full rounded-lg bg-white/6 border border-white/8 px-3 py-2 text-white placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 outline-none"
+              className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-white placeholder-slate-400 transition duration-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/50 outline-none shadow-inner"
               placeholder="you@example.com"
               autoComplete="email"
               aria-label="Email address"
+              required
             />
           </label>
 
           <label className="block">
-            <span className="text-sm text-slate-200">Password</span>
+            <span className="text-sm font-medium text-slate-200 block mb-1">Password</span>
             <input
               value={form.password}
               onChange={(e) => setField("password", e.target.value)}
               type="password"
-              className="mt-1 w-full rounded-lg bg-white/6 border border-white/8 px-3 py-2 text-white placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 outline-none"
-              placeholder={mode === "register" ? "Create a strong password" : "Enter your password"}
+              className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-white placeholder-slate-400 transition duration-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/50 outline-none shadow-inner"
+              placeholder={mode === "register" ? "Create a secure password" : "Enter your password"}
               autoComplete={mode === "register" ? "new-password" : "current-password"}
               aria-label="Password"
+              required
             />
             {mode === "register" && (
-              <p className="mt-1 text-xs text-slate-400">At least 8 characters, include letters and numbers.</p>
+              <p className="mt-2 text-xs text-slate-400 opacity-80">
+                Minimum 8 characters. Protect your account.
+              </p>
             )}
           </label>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-8">
           <button
             type="submit"
             disabled={loading}
-            className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-indigo-600 to-emerald-500 py-2 px-4 font-semibold shadow-md hover:opacity-95 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full inline-flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-indigo-600 to-emerald-500 py-3 px-4 font-bold text-lg shadow-xl shadow-indigo-500/20 transition-all duration-300 hover:from-indigo-700 hover:to-emerald-600 hover:shadow-indigo-500/40 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {loading ? (
-              <span className="text-white text-sm">{mode === "register" ? "Creating..." : "Signing in..."}</span>
+              <>
+                <Loader2 size={20} className="animate-spin text-white" />
+                <span className="text-white text-base font-semibold tracking-wide">
+                  {mode === "register" ? "Creating..." : "Signing in..."}
+                </span>
+              </>
             ) : (
-              <span className="text-white text-sm">{mode === "register" ? "Create account" : "Sign in"}</span>
+              <span className="text-white text-base font-semibold tracking-wide">
+                {mode === "register" ? "Create Account" : "Sign In"}
+              </span>
             )}
           </button>
         </div>
 
-        <div className="mt-4 text-center text-sm text-slate-300">
-          {mode === "register" ? "Already have an account?" : "Don't have an account?"}{" "}
+        <div className="mt-6 text-center text-sm text-slate-400">
+          {mode === "register" ? "Already a member?" : "New to our site?"}{" "}
           <button
             type="button"
             onClick={toggleMode}
             disabled={loading}
-            className="text-indigo-300 hover:text-indigo-200 font-medium ml-1"
+            className="text-indigo-400 hover:text-indigo-300 font-bold ml-1 transition duration-200 disabled:opacity-50"
           >
-            {mode === "register" ? "Sign in" : "Create one"}
+            {mode === "register" ? "Sign In" : "Create an account"}
           </button>
         </div>
 
-        <footer className="mt-6 text-center text-xs text-slate-500">
-          By continuing you agree to our Terms and Privacy.
+        <footer className="mt-8 pt-4 border-t border-white/5 text-center text-xs text-slate-500">
+          <p>&copy; 2025 Store. All rights reserved.</p>
+          <p className="mt-1">By continuing you agree to our Terms and Privacy Policy.</p>
         </footer>
       </motion.form>
     </section>
