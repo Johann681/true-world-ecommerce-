@@ -215,7 +215,7 @@ export default function ShopPage() {
         <div className="aspect-[3/4] w-full overflow-hidden rounded-sm bg-gray-100 relative">
           {stock <= 0 && (
             <div className="absolute inset-0 bg-white/60 z-10 flex items-center justify-center">
-              <span className="bg-gray-900 text-white text-xs px-2 py-1 uppercase tracking-wider">Sold Out</span>
+              <span className="bg-gray-900 text-white text-xs px-2 py-1 uppercase tracking-wider">Sold Out now</span>
             </div>
           )}
           <Image 
