@@ -21,22 +21,22 @@ const ArrowRight = ({ className }: { className?: string }) => (
 );
 
 export function SplitHeroSlider() {
+  // UPDATED: Ensure you have images of phones/gadgets at these paths
   const slides = [
-    { 
-      src: "/home.jpg", 
-      alt: "Premium tech showcase 1",
-      // Fallback color if image fails to load
-      bgColor: "bg-gray-100" 
+    {
+      src: "/home.jpg",
+      alt: "Latest iPhone and Samsung devices",
+      bgColor: "bg-gray-100",
     },
-    { 
-      src: "/home2.jpg", 
-      alt: "Premium tech showcase 2",
-      bgColor: "bg-gray-200"
+    {
+      src: "/home2.jpg",
+      alt: "Premium smartwatches and accessories",
+      bgColor: "bg-gray-200",
     },
-    { 
-      src: "/home3.jpg", 
-      alt: "Premium tech showcase 3",
-      bgColor: "bg-gray-300"
+    {
+      src: "/home3.jpg",
+      alt: "True World Phones store interior",
+      bgColor: "bg-gray-300",
     },
   ];
 
@@ -45,13 +45,13 @@ export function SplitHeroSlider() {
   const [isHovered, setIsHovered] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Auto-play logic with pause on hover
+  // Auto-play logic
   useEffect(() => {
     if (prefersReduced || isHovered) return;
-    
+
     timeoutRef.current = setInterval(() => {
       setIndex((prev) => (prev + 1) % slides.length);
-    }, 5000); // Slower, more elegant timing
+    }, 5000);
 
     return () => {
       if (timeoutRef.current) clearInterval(timeoutRef.current);
@@ -62,25 +62,23 @@ export function SplitHeroSlider() {
     <section className="w-full bg-white text-[#0A0F1F] overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 py-16 md:py-24 lg:py-32">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
-
           {/* LEFT: Cinematic Slider */}
-          <div 
+          <div
             className="lg:col-span-7 relative order-2 lg:order-1"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            {/* Image Container */}
             <div className="relative w-full aspect-[4/5] md:aspect-[16/10] lg:aspect-[4/3] bg-[#F5F7FA] rounded-sm overflow-hidden shadow-2xl shadow-gray-200/50">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={index}
                   className={`absolute inset-0 w-full h-full ${slides[index].bgColor}`}
-                  initial={{ opacity: 0, scale: 1.1 }} // Start slightly zoomed in
-                  animate={{ opacity: 1, scale: 1 }}   // Zoom out to normal (or vice versa)
+                  initial={{ opacity: 0, scale: 1.1 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ 
+                  transition={{
                     opacity: { duration: 0.8, ease: "easeInOut" },
-                    scale: { duration: 6, ease: "linear" } // "Ken Burns" effect
+                    scale: { duration: 6, ease: "linear" },
                   }}
                 >
                   <img
@@ -88,13 +86,11 @@ export function SplitHeroSlider() {
                     alt={slides[index].alt}
                     className="w-full h-full object-cover"
                   />
-                  
-                  {/* Subtle Gradient Overlay for Depth */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-60" />
                 </motion.div>
               </AnimatePresence>
 
-              {/* Modern Progress Indicators */}
+              {/* Progress Indicators */}
               <div className="absolute left-6 bottom-6 md:left-8 md:bottom-8 flex items-center gap-3 z-10">
                 {slides.map((_, i) => (
                   <button
@@ -104,11 +100,14 @@ export function SplitHeroSlider() {
                     aria-label={`Go to slide ${i + 1}`}
                   >
                     <div className="h-[3px] rounded-full transition-all duration-500 w-8 md:w-12 overflow-hidden bg-white/30 backdrop-blur-sm">
-                      <motion.div 
+                      <motion.div
                         className="h-full bg-white"
                         initial={{ width: "0%" }}
                         animate={{ width: i === index ? "100%" : "0%" }}
-                        transition={{ duration: i === index ? 5 : 0.3, ease: "linear" }}
+                        transition={{
+                          duration: i === index ? 5 : 0.3,
+                          ease: "linear",
+                        }}
                       />
                     </div>
                   </button>
@@ -124,63 +123,79 @@ export function SplitHeroSlider() {
               animate="visible"
               variants={{
                 hidden: { opacity: 0 },
-                visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
+                visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
               }}
             >
-              {/* Eyebrow Tag */}
-              <motion.div 
-                variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
+              {/* Eyebrow Tag - UPDATED */}
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, y: 10 },
+                  visible: { opacity: 1, y: 0 },
+                }}
                 className="inline-flex items-center gap-2 mb-6"
               >
                 <span className="w-8 h-[1px] bg-[#1E4AFF]"></span>
-                <span className="text-xs font-bold tracking-widest uppercase text-[#1E4AFF]">New Collection</span>
+                <span className="text-xs font-bold tracking-widest uppercase text-[#1E4AFF]">
+                  Trusted Since 2004
+                </span>
               </motion.div>
 
-              {/* Headline */}
+              {/* Headline - UPDATED */}
               <motion.h2
-                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 },
+                }}
                 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-[1.1] text-[#0A0F1F]"
               >
-                Designed with <br className="hidden lg:block" /> 
-                <span className="text-gray-900">intent.</span>
-                <span className="block mt-2 text-[#1E4AFF]">Built to last.</span>
+                True <br className="hidden lg:block" />
+                <span className="text-gray-900">Authenticity.</span>
+                <span className="block mt-2 text-[#1E4AFF]">
+                  World Class Tech.
+                </span>
               </motion.h2>
 
-              {/* Description */}
+              {/* Description - UPDATED */}
               <motion.p
-                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 },
+                }}
                 className="mt-6 text-base md:text-lg text-gray-500 max-w-md leading-relaxed font-light"
               >
-                Explore our curated collection of devices and luxury products — 
-                clean layouts, premium visuals, and an experience crafted for 
-                modern customers.
+                For over 20 years, <strong>True World Phones & Gadgets</strong>{" "}
+                has delivered authentic devices and top-tier service across
+                Lagos. Discover unbeatable prices on the latest premium
+                smartphones and accessories.
               </motion.p>
 
-              {/* Buttons */}
+              {/* Buttons - UPDATED */}
               <motion.div
-                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 },
+                }}
                 className="mt-10 flex flex-wrap gap-4"
               >
                 <a
-                  href="/collections/featured"
+                  href=""
                   className="group relative inline-flex items-center justify-center px-8 py-4 text-sm font-semibold text-white bg-[#0A0F1F] overflow-hidden rounded-sm transition-all hover:bg-[#1E4AFF]"
                 >
                   <span className="relative z-10 flex items-center gap-2">
-                    Shop Featured
+                    Shop Devices
                     <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </span>
                 </a>
 
                 <a
-                  href="/collections/cars"
+                  href=""
                   className="group inline-flex items-center justify-center px-8 py-4 text-sm font-semibold text-[#0A0F1F] bg-transparent border border-gray-200 rounded-sm hover:border-[#0A0F1F] transition-all"
                 >
-                  View Cars
+                  View Accessories
                 </a>
               </motion.div>
             </motion.div>
           </div>
-
         </div>
       </div>
     </section>

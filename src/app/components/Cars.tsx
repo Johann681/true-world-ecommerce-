@@ -19,6 +19,7 @@ export default function CarShopSection() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // KEEPING ENDPOINTS EXACTLY AS REQUESTED
   const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000").replace(/\/$/, "");
 
   useEffect(() => {
@@ -30,8 +31,8 @@ export default function CarShopSection() {
         const carsArray = Array.isArray(res.data) ? res.data : res.data?.data ?? [];
         setCars(carsArray);
       } catch (err) {
-        console.error("Failed to fetch cars:", err);
-        const errorMessage = (err as AxiosError)?.message || "Could not connect to car listings.";
+        console.error("Failed to fetch listings:", err);
+        const errorMessage = (err as AxiosError)?.message || "Could not connect to listings.";
         setError(errorMessage);
         setCars([]);
       } finally {
@@ -45,7 +46,7 @@ export default function CarShopSection() {
     const link = car.contactLink?.trim();
     if (car.contactType === "whatsapp" && link) {
       let whatsappLink = link.startsWith('http') ? link : `https://wa.me/${link}`;
-      const msg = encodeURIComponent(`Hello, I'm interested in the ${car.name} (${formatPrice(car.price)}). Is it still available?`);
+      const msg = encodeURIComponent(`Hello True World, I'm interested in the ${car.name} (${formatPrice(car.price)}). Is it still available?`);
       if (!whatsappLink.includes('?')) whatsappLink = `${whatsappLink}${whatsappLink.includes('wa.me/') ? '?' : ''}text=${msg}`;
       window.open(whatsappLink, "_blank");
       return;
@@ -55,88 +56,115 @@ export default function CarShopSection() {
       window.open(instaLink, "_blank");
       return;
     }
-    alert(`Contact link for ${car.name} is missing. Please contact support.`);
+    alert(`Contact link for ${car.name} is missing.`);
   };
 
   // --- Render ---
   return (
-    <section className="bg-gray-50 py-24">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="bg-white py-24 border-t border-gray-100">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16">
+        
         {/* Header */}
-        <div className="text-center mb-16">
-          <p className="text-indigo-600 uppercase text-sm font-semibold tracking-wide mb-2">Premium Cars</p>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900">Exclusive Car Listings</h2>
-          <p className="text-gray-500 mt-3 max-w-2xl mx-auto">Browse our hand-picked selection of top-quality vehicles, updated daily for your convenience.</p>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 mb-4">
+              <span className="w-6 h-[2px] bg-[#1E4AFF]"></span>
+              <span className="text-xs font-bold tracking-widest uppercase text-[#1E4AFF]">
+                Premium Selection
+              </span>
+            </div>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#0A0F1F] tracking-tight">
+              Exclusive Inventory
+            </h2>
+            <p className="text-gray-500 mt-4 text-lg font-light">
+              Browse our hand-picked selection of top-quality items, curated for performance and style.
+            </p>
+          </div>
         </div>
 
         {/* Loading */}
         {loading && (
-          <div className="text-center py-24">
-            <Loader2 size={32} className="animate-spin text-indigo-500 mx-auto mb-4" />
-            <p className="text-lg text-gray-500">Loading premium car listings...</p>
+          <div className="flex flex-col items-center justify-center py-32">
+            <Loader2 size={40} className="animate-spin text-[#1E4AFF] mb-4" />
+            <p className="text-gray-400 font-light">Loading inventory...</p>
           </div>
         )}
 
         {/* Error */}
         {error && !loading && (
-          <div className="text-center py-24">
+          <div className="text-center py-24 bg-red-50 rounded-lg border border-red-100">
             <Zap size={32} className="text-red-500 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-red-600 mb-2">Error Loading Cars</h3>
-            <p className="text-gray-500">{error}</p>
+            <h3 className="text-lg font-semibold text-red-700 mb-2">Unable to load inventory</h3>
+            <p className="text-red-600/80">{error}</p>
           </div>
         )}
 
-        {/* Car Grid */}
+        {/* Grid */}
         {!loading && !error && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {cars.length === 0 ? (
-              <div className="col-span-full text-center text-gray-500 py-16 bg-white rounded-xl border border-dashed border-gray-300">
-                <MessageCircle size={32} className="mx-auto mb-3 text-gray-400" />
-                <p className="text-lg font-medium">No active listings available right now.</p>
-                <p className="text-sm mt-1">Check back soon for new arrivals!</p>
+              <div className="col-span-full text-center py-24 bg-gray-50 rounded-lg border border-dashed border-gray-200">
+                <MessageCircle size={32} className="mx-auto mb-4 text-gray-300" />
+                <p className="text-gray-900 font-medium text-lg">Inventory Updating</p>
+                <p className="text-gray-500">Check back shortly for new arrivals.</p>
               </div>
             ) : (
               cars.map((car) => (
                 <div
                   key={car._id}
-                  className="bg-white rounded-3xl shadow-lg border border-gray-100 transition-all duration-300 transform hover:scale-[1.03] hover:shadow-2xl flex flex-col overflow-hidden"
+                  className="group flex flex-col bg-transparent"
                 >
-                  {/* Image */}
-                  <div className="w-full h-56 relative overflow-hidden bg-gray-100">
+                  {/* Image Area - TALLER, CLEANER, NO OVERLAYS */}
+                  <div className="relative w-full aspect-[4/5] bg-gray-50 rounded-lg overflow-hidden mb-6 shadow-sm border border-gray-100">
                     <Image
                       src={car.images?.[0] || car.image || "/placeholder-car.jpg"}
                       alt={car.name}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                      className="object-cover transition duration-500 group-hover:opacity-90"
+                      // object-cover ensures it fills the space vividly
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   </div>
 
-                  {/* Content */}
-                  <div className="p-5 flex flex-col flex-grow">
-                    <div className="flex-grow">
-                      <h3 className="font-bold text-xl text-gray-900 line-clamp-1">{car.name}</h3>
-                      <p className="text-indigo-600 text-sm font-semibold mt-1">{car.brand || "Unspecified"}</p>
-                      <p className="text-gray-500 text-sm mt-2 line-clamp-3">{car.description || "No description provided."}</p>
+                  {/* Content Area */}
+                  <div className="flex flex-col flex-grow">
+                    
+                    {/* Brand & Price Row */}
+                    <div className="flex justify-between items-start mb-2">
+                      <p className="text-[#1E4AFF] text-xs font-bold uppercase tracking-wider">
+                        {car.brand || "Premium"}
+                      </p>
+                      <p className="font-bold text-[#0A0F1F] text-lg">
+                        {formatPrice(car.price)}
+                      </p>
                     </div>
 
-                    <p className="mt-4 mb-5 font-extrabold text-2xl text-green-700">{formatPrice(car.price)}</p>
+                    {/* Name */}
+                    <h3 className="font-bold text-xl text-[#0A0F1F] leading-tight mb-3 group-hover:text-[#1E4AFF] transition-colors">
+                      {car.name}
+                    </h3>
 
+                    {/* Description - FULLY VISIBLE */}
+                    <div className="text-gray-500 text-sm leading-relaxed mb-6">
+                      {car.description || "No specific description provided for this item."}
+                    </div>
+
+                    {/* Action Button */}
                     <button
                       onClick={() => handleContact(car)}
-                      className={`flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl text-white font-semibold transition-colors shadow-lg 
+                      className={`mt-auto flex items-center justify-center gap-2 w-full px-4 py-4 rounded-sm text-sm font-semibold transition-all duration-300 shadow-sm
                         ${car.contactType === "whatsapp" 
-                            ? "bg-green-500 hover:bg-green-600 shadow-green-500/30" 
-                            : "bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/30"
+                            ? "bg-[#0A0F1F] text-white hover:bg-[#1E4AFF] hover:shadow-lg" 
+                            : "bg-white text-[#0A0F1F] border border-gray-200 hover:border-[#0A0F1F]"
                         }`}
                     >
                       {car.contactType === "whatsapp" ? (
                         <>
-                          <PhoneCall size={20} /> Chat on WhatsApp
+                          <PhoneCall size={18} /> Buy Now
                         </>
                       ) : (
                         <>
-                          <Instagram size={20} /> Message on Instagram
+                          <Instagram size={18} /> View on Instagram
                         </>
                       )}
                     </button>

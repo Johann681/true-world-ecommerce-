@@ -146,10 +146,7 @@ export default function GlassNavbar() {
             <ShoppingCart size={18} />
             <span>Cart</span>
           </Link>
-          <Link href="/auth" className="flex flex-col items-center">
-            <User size={18} />
-            <span>Account</span>
-          </Link>
+         
         </div>
       </nav>
     </>
