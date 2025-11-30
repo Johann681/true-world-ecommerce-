@@ -1,6 +1,6 @@
 import express from "express";
 import { protect, adminOnly } from "../middleware/authMiddleware.js";
-import { createCar, getCars, deleteCar } from "../controllers/carController.js";
+import { createCar, getCars, deleteCar, updateCar } from "../controllers/carController.js";
 
 const router = express.Router();
 
@@ -9,6 +9,7 @@ router.get("/", getCars);
 
 // 🔐 Admin-only routes
 router.post("/", protect, adminOnly, createCar);
+router.put("/:id", protect, adminOnly, updateCar);   // ✅ ADD THIS
 router.delete("/:id", protect, adminOnly, deleteCar);
 
 export default router;
