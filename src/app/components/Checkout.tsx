@@ -78,7 +78,7 @@ export default function Checkout() {
 
   // --- Handlers ---
   const handleWhatsApp = () => {
-    const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "2348000000000";
+    const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "2349098274267";
     const items = getCartSummary()
       .map((i) => `${i.quantity}x ${i.name}`)
       .join(", ");
