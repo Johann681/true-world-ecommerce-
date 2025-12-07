@@ -4,14 +4,18 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
+
 import userRoutes from "./routes/UserRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import orderRoutes from "./routes/OrderRoutes.js";
-import carRoutes from "./routes/carRoutes.js"
+import carRoutes from "./routes/carRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import brandRoutes from "./routes/brandRoutes.js";
+
+// 👉 NEW: Paystack Routes
+import paymentRoutes from "./routes/paymentRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -31,12 +35,23 @@ app.get("/", (req, res) => {
 
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
-app.use ("/api/admin" , adminRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/cars", carRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/brands", brandRoutes);
+
+// 👉 NEW: Payment Routes
+// ⚠️ Webhook MUST come before express.json()
+app.use(
+  "/api/payments/webhook",
+  express.raw({ type: "*/*" }),
+  paymentRoutes
+);
+
+// Normal payment endpoints (initialize + verify)
+app.use("/api/payments", paymentRoutes);
 
 // 🚀 Start the server
 const PORT = process.env.PORT || 5000;
