@@ -41,23 +41,33 @@ export default function CarShopSection() {
     };
     fetchCars();
   }, [API_URL]);
-
   const handleContact = (car: any) => {
+    const defaultWhatsApp = "+2349098274267";
     const link = car.contactLink?.trim();
-    if (car.contactType === "whatsapp" && link) {
-      let whatsappLink = link.startsWith('http') ? link : `https://wa.me/${link}`;
+  
+    if (car.contactType === "whatsapp") {
+      // Use default number if link missing or not a valid URL
+      let whatsappLink = link && link.startsWith("http") ? link : `https://wa.me/${defaultWhatsApp.replace(/\D/g, "")}`;
       const msg = encodeURIComponent(`Hello True World, I'm interested in the ${car.name} (${formatPrice(car.price)}). Is it still available?`);
-      if (!whatsappLink.includes('?')) whatsappLink = `${whatsappLink}${whatsappLink.includes('wa.me/') ? '?' : ''}text=${msg}`;
+  
+      // Append the text message properly
+      if (!whatsappLink.includes("text=")) {
+        whatsappLink += whatsappLink.includes("?") ? `&text=${msg}` : `?text=${msg}`;
+      }
+  
       window.open(whatsappLink, "_blank");
       return;
-    } 
+    }
+  
     if (car.contactType === "instagram" && link) {
-      const instaLink = link.startsWith('http') ? link : `https://www.instagram.com/${link.replace('@', '')}`;
+      const instaLink = link.startsWith("http") ? link : `https://www.instagram.com/${link.replace("@", "")}`;
       window.open(instaLink, "_blank");
       return;
     }
+  
     alert(`Contact link for ${car.name} is missing.`);
   };
+  
 
   // --- Render ---
   return (
