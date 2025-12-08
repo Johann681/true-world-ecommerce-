@@ -152,7 +152,7 @@ export default function Checkout() {
                   <span className="font-medium">{formatPrice(totalPrice)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Shipping</span>
+                  <span className="text-gray-500">delivery</span>
                   <span className="text-gray-400 italic">Calculated at next step</span>
                 </div>
               </div>
