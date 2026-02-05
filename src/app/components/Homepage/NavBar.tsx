@@ -134,7 +134,7 @@ export default function GlassNavbar() {
             <Home size={18} />
             <span>Home</span>
           </Link>
-          <Link href="/explore-cars" className="flex flex-col items-center">
+          <Link href="/cars" className="flex flex-col items-center">
             <Car size={18} />
             <span>Cars</span>
           </Link>
